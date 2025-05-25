@@ -1,15 +1,9 @@
 <script>
-    // let gameTimer = $state(0);
     let money = $state(0);
     let moneyPerSecond = $state(1)
     let energy = $state(50);
     let community = $state(0);
     let playDeadActive = $state(false)
-
-    // const autoIncrementTime = setInterval(() => {
-    //     gameTimer += 1;
-    // }, 1000);
-
 
     const autoIncrementMoney = setInterval(() => {
         money += moneyPerSecond;
@@ -20,13 +14,11 @@
     }
 
     function increaseEnergy() {
-        if ( energy < 100 ) {
-            energy += 1;
-        }
+        energy = Math.min(100, energy += 100);
     }
 
     function increaseCommunity() {
-        community += 1;
+        community += 100;
     }
 
     // GAME TIME
@@ -61,12 +53,12 @@
 
     // STADIUM SEATING
     // starts at 0; max 5
-    let stadiumUpgradeCosts = [ 10, 100, 500, 1000, 2000 ]
+    let stadiumUpgradeCosts = [ 10, 75, 150, 250, 300 ]
     let stadiumStatus = $state(0);
     function upgradeStadium() {
         if ( stadiumStatus < 5 ) {
             money -= stadiumUpgradeCosts[stadiumStatus];
-            moneyPerSecond += 1;
+            moneyPerSecond += 2;
             stadiumStatus += 1;
         }
         
@@ -84,7 +76,7 @@
     function upgradeConcessions() {
         if ( concessionStatus < 3 ) {
             money -= concessionUpgrades[concessionStatus].cost;
-            moneyPerSecond += 3;
+            moneyPerSecond += 10;
             concessionStatus += 1;
         }
         
@@ -101,7 +93,7 @@
                 clearInterval( playDeadInterval );
                 playDeadActive = false;
                 playDeadCounter = 15;
-                energy = Math.min(100, energy += 25);
+                energy = Math.min(100, energy += 50);
             }
         }, 1000);
     }
@@ -114,12 +106,12 @@
 
     function oneTime( num ) {
         if ( num == 1 ) {
-            // money - 1000
-            money -= 1000;
+            // money - 500
+            money -= 500;
             // energy - 10
             energy -= 10;
-            // community + 40 
-            community += 40;
+            // community + 80 
+            community += 80;
 
             boughtOneTime1 = true;
         } else if ( num == 2 ) {
@@ -130,17 +122,17 @@
 
             boughtOneTime2 = true;
         } else if ( num == 3 ) {
-            // money - 2000
-            money -= 2000;
+            // money - 750
+            money -= 750;
             // energy - 10
             energy -= 10;
-            // community + 100
-            community += 100;
+            // community + 75
+            community += 75;
 
             boughtOneTime3 = true;
         } else if ( num == 4 ) {
-            // money - 2500
-            money -= 2500;
+            // money - 1000
+            money -= 1000;
             // energy - 15
             energy -= 15;
             // community + 150
@@ -152,15 +144,74 @@
 
     function fundraise() {
         energy -= 10;
-        money += 100;
+        money += 50;
+    }
+
+    // STATUES
+    let boughtRaimondi = $state(false);
+    let boughtCityHall = $state(false);
+    let boughtLake = $state(false);
+
+    function buyStatue( setting ) {
+        if ( setting == 'raimondi' ) {
+            boughtRaimondi = true;
+        } else if ( setting == 'cityhall' ) {
+            boughtCityHall = true;
+        } else if ( setting == 'lake' ) {
+            boughtLake = true;
+        }
+
+        community -= 300;
     }
     
 </script>
 
 <main>
 <section>
-    <h1>Scrappy manages the B’s</h1>
-    <p>Goal: Grow your community love!</p>
+    <h1>Scrappy’s Statue Quest</h1>
+    <p>Click enough to place Scrappy statues around Oakland.</p>
+
+    <div class="statues-container">
+        <h3>Statues</h3>
+        <div class="statues-images-container">
+            <div class="statue">
+            {#if boughtRaimondi}
+                <img src="raimondi_revealed.jpg" alt="opaque crowd at Oakland Ballers Game at Raimondi Park with Scrappy silhouette in the background" />
+            {:else}
+                <img src="raimondi_dark.jpg" alt="crowd at Oakland Ballers Game at Raimondi Park with Scrappy drawing in the background" />
+                <button onclick={() => buyStatue('raimondi')} disabled={playDeadActive || money < 300 || community < 300}>
+                    Buy Raimondi Park statue
+                    <p>Cost: 💰300 ❤️300</p>
+                </button>
+            {/if}
+            </div>
+            <div class="statue">
+                {#if boughtCityHall}
+                    <img src="cityhall_revealed.jpg" alt="Oakland City Hall plaza with small crowd and Scrappy statue drawing in foreground" />
+                {:else}
+                    <img src="cityhall_dark.jpg" alt="opaque Oakland City Hall plaza with small crowd and Scrappy statue drawing in foreground" />
+                    <button onclick={() => buyStatue('cityhall')} disabled={playDeadActive || money < 300 || community < 300}>
+                        Buy City Hall statue
+                        <p>Cost: 💰300 ❤️300</p>
+                    </button>
+                {/if}
+            </div>
+            <div class="statue">
+                {#if boughtLake}
+                    <img src="lake_revealed.jpg" alt="Oakland Lake Merritt at night with lit buildings and Scrappy statue drawing in the water" />
+                {:else}
+                    <img src="lake_dark.jpg" alt="opaque Oakland Lake Merritt at night with lit buildings and Scrappy statue drawing in the water" />
+                    <button onclick={() => buyStatue('lake')} disabled={playDeadActive || money < 300 || community < 300}>
+                        Buy Lake Merritt statue
+                        <p>Cost: 💰300 ❤️300</p>
+                    </button>
+                {/if}
+            </div>
+        </div>
+        {#if boughtCityHall && boughtLake && boughtRaimondi}
+            <h1>Congratulations, you got all the statues! Thanks for playing (You can still keep clicking if you like).</h1>
+        {/if}
+    </div>
 
     <div class="stats-container">
         <p>💰 Money ({moneyPerSecond}/second): {money.toLocaleString()}</p>
@@ -172,136 +223,171 @@
     <button onclick={increaseEnergy} disabled={energy == 100}>CHEAT: Click for energy</button>
     <button onclick={increaseCommunity}>CHEAT: Click for community</button> -->
 
-    <div class="buttons-container">
-        <div class="buttons-container-col">
-            <h3>Scrappy do your thing</h3>
-            <button onclick={nextGameIsHome ? rallyHome : rallyAway} disabled={playDeadActive || !isGamePlaying || ( !nextGameIsHome && energy < 2 ) || ( nextGameIsHome && energy < 1 )}>
-                Rally the crowd at today's {nextGameIsHome ? 'home' : 'away'} game
-                {#if nextGameIsHome}
-                    <p>Cost: ⚡ 1</p>
-                    <p>Reward: ❤️ 2</p>
-                {:else}
-                    <p>Cost: ⚡ 2</p>
-                    <p>Reward: ❤️ 1</p>
-                {/if}
-                <p style:font-style={'italic'} style:margin-top={'8px'}>{isGamePlaying ? 'Game over in' : 'Next game in'}: {gameCountdown}</p>
-            </button>
-
-            <button onclick={playDead} disabled={playDeadActive}>
-                Play dead (AKA nap)
-                <p>Cost: Can’t rally, fundraise or buy one-time actions</p>
-                <p>Reward: ⚡ 25</p>
-                {#if playDeadActive}
-                    <p style:font-style={'italic'} style:margin-top={'8px'}>Play dead over in: {playDeadCounter}</p>
-                {/if}
-            </button>
-            
-            <button onclick={fundraise} disabled={playDeadActive || energy < 10}>
-                Fundraise
-                <p>Cost: ⚡ 10</p>
-                <p>Reward: 💰 100</p>
-            </button>
-
-            <h3>One-time actions</h3>
-            <div class="buttons-row">
-                <button onclick={() => oneTime(2)} disabled={playDeadActive || boughtOneTime2 || energy < 20}>
-                Host neighborhood cleanup{boughtOneTime2 ? ' ✅' : ''}
-                <p>Cost:⚡ 20</p>
-                <p>Reward: ❤️ 100</p>
+    <div class="clicking-container">
+        <div class="clicking-section">
+            <h3>Scrappy’s main jobs</h3>
+            <div class="buttons-section">
+                <button onclick={nextGameIsHome ? rallyHome : rallyAway} disabled={playDeadActive || !isGamePlaying || ( !nextGameIsHome && energy < 2 ) || ( nextGameIsHome && energy < 1 )}>
+                    Rally the crowd at today’s {nextGameIsHome ? 'HOME' : 'AWAY'} game
+                    {#if nextGameIsHome}
+                        <p>Cost: ⚡1</p>
+                        <p>Reward: ❤️2</p>
+                    {:else}
+                        <p>Cost: ⚡2</p>
+                        <p>Reward: ❤️1</p>
+                    {/if}
+                    <p style:font-style={'italic'} style:margin-top={'8px'}>{isGamePlaying ? 'Game over in' : 'Next game in'}: {gameCountdown}</p>
                 </button>
-                <button onclick={() => oneTime(1)} disabled={playDeadActive || boughtOneTime1 || money < 1000 || energy < 10}>
-                    Promote discounted tickets{boughtOneTime1 ? ' ✅' : ''}
-                    <p>Cost: 💰 1,000 ⚡ 10</p>
-                    <p>Reward: ❤️ 40</p>
+                <button onclick={fundraise} disabled={playDeadActive || energy < 10}>
+                    Fundraise
+                    <p>Cost: ⚡10</p>
+                    <p>Reward: 💰50</p>
                 </button>
-                <button onclick={() => oneTime(3)} disabled={playDeadActive || boughtOneTime3 || money < 2000 || energy < 10}>
-                    Give out free swag{boughtOneTime3 ? ' ✅' : ''}
-                    <p>Cost: 💰 2,000 ⚡ 10</p>
-                    <p>Reward: ❤️ 100</p>
-                </button>
-                <button onclick={() => oneTime(4)} disabled={playDeadActive || boughtOneTime4 || money < 2500 || energy < 15}>
-                    Bring a local celebrity to visit{boughtOneTime4 ? ' ✅' : ''}
-                    <p>Cost: 💰 2,500 ⚡ 15</p>
-                    <p>Reward: ❤️ 150</p>
+                <button onclick={playDead} disabled={playDeadActive}>
+                    Play dead (AKA nap)
+                    <p>Cost: Can’t rally, fundraise or<br/>buy one-time actions for 15 seconds</p>
+                    <p>Reward: ⚡50</p>
+                    {#if playDeadActive}
+                        <p style:font-style={'italic'} style:margin-top={'8px'}>Play dead over in: {playDeadCounter}</p>
+                    {/if}
                 </button>
             </div>
         </div>
-        <div class="buttons-container-col">
+        <div class="clicking-section">
             <h3>Stadium upgrades</h3>
-            <button onclick={upgradeStadium} disabled ={stadiumStatus == 5 || ( stadiumStatus < 5 && money < stadiumUpgradeCosts[stadiumStatus] )}>
-                Add stadium seating
-                <p>Owned: {stadiumStatus}/5</p>
-                {#if stadiumStatus < 5}
-                <p>Cost: 💰 {stadiumUpgradeCosts[stadiumStatus]}</p>
-                <p>Reward: +1 money rate</p>
-                {/if}
-            </button>
-            {#if stadiumStatus > 0}
-                <button onclick={upgradeConcessions} disabled={concessionStatus == 3 || ( concessionStatus < 3 && money < concessionUpgrades[concessionStatus].cost )}>
-                    Concessions upgrade
-                    {#if concessionStatus < 3}
-                        <p>Next: {concessionUpgrades[concessionStatus].name}</p>
+            <div class="buttons-section">
+                <button onclick={upgradeStadium} disabled ={stadiumStatus == 5 || ( stadiumStatus < 5 && money < stadiumUpgradeCosts[stadiumStatus] )}>
+                    Add stadium seating
+                    {#if stadiumStatus < 5}
+                        <p>More seats = more tickets to sell</p>
+                    {:else}
+                        <p>Sold out!</p>
                     {/if}
-                    <p>Owned: {concessionStatus}/3</p>
-                    {#if concessionStatus < 3}
-                        <p>Cost: 💰 {concessionUpgrades[concessionStatus].cost}</p>
-                        <p>Reward: +5 money rate</p>
+                    <p>Owned: {stadiumStatus}/5{stadiumStatus == 5 ? ' ✅' : ''}</p>
+                    {#if stadiumStatus < 5}
+                    <p>Cost: 💰{stadiumUpgradeCosts[stadiumStatus]}</p>
+                    <p>Reward: +2 💰/second</p>
                     {/if}
                 </button>
-            {/if}
-
-            <img src="scrappy_transparent.png" alt="line drawing of Scrappy the Rally Possum facing sideways" />
+                {#if stadiumStatus > 0}
+                    <button onclick={upgradeConcessions} disabled={concessionStatus == 3 || ( concessionStatus < 3 && money < concessionUpgrades[concessionStatus].cost )}>
+                        Concessions upgrade
+                        {#if concessionStatus < 3}
+                            <p>Next: {concessionUpgrades[concessionStatus].name}</p>
+                        {:else}
+                            <p>Yummm</p>
+                        {/if}
+                        <p>Owned: {concessionStatus}/3{concessionStatus == 3 ? ' ✅' : ''}</p>
+                        {#if concessionStatus < 3}
+                            <p>Cost: 💰{concessionUpgrades[concessionStatus].cost}</p>
+                            <p>Reward: +10 💰/second</p>
+                        {/if}
+                    </button>
+                {/if}
+            </div>
         </div>
+        <div class="clicking-section">
+            <h3>One-time actions</h3>
+            <div class="buttons-section">
+                <button onclick={() => oneTime(2)} disabled={playDeadActive || boughtOneTime2 || energy < 20}>
+                Host neighborhood cleanup{boughtOneTime2 ? ' ✅' : ''}
+                <p>Cost:⚡20</p>
+                <p>Reward: ❤️100</p>
+                </button>
+                <button onclick={() => oneTime(1)} disabled={playDeadActive || boughtOneTime1 || money < 500 || energy < 10}>
+                    Promote discounted tickets{boughtOneTime1 ? ' ✅' : ''}
+                    <p>Cost: 💰 500 ⚡10</p>
+                    <p>Reward: ❤️80</p>
+                </button>
+                <button onclick={() => oneTime(3)} disabled={playDeadActive || boughtOneTime3 || money < 750 || energy < 10}>
+                    Give out free swag{boughtOneTime3 ? ' ✅' : ''}
+                    <p>Cost: 💰750 ⚡10</p>
+                    <p>Reward: ❤️75</p>
+                </button>
+                <button onclick={() => oneTime(4)} disabled={playDeadActive || boughtOneTime4 || money < 1000 || energy < 15}>
+                    Bring a local celebrity to visit{boughtOneTime4 ? ' ✅' : ''}
+                    <p>Cost: 💰1,000 ⚡15</p>
+                    <p>Reward: ❤️150</p>
+                </button>
+            </div>
+        </div>
+        
     </div>
     
-    </section>
+    
+</section>
 </main>
 
 <style>
     section {
-        margin: 0 auto;
-        max-width: 700px;
-        
+        margin: 24px auto;
+        max-width: 95%;
+
+        @media screen and ( max-width: 700px ){
+            text-align: center;
+        }
 
         .stats-container {
-            margin: 8px 0 24px;
+            margin: 8px 0 16px;
 
             border-top: 2px solid #C8A31E;
             border-bottom: 2px solid #C8A31E;
             padding: 4px;
         }
-
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-
-            .buttons-container-col {
-                display: flex;
-                flex-direction: column;
-                max-width: calc(50% - 4px);
-
-                .buttons-row {
+        .clicking-container {
+            .clicking-section {
+                
+                .buttons-section {
                     display: flex;
                     flex-wrap: wrap;
 
+                    @media screen and ( max-width: 700px ){
+                        justify-content: center;
+                    }
+                
                     button {
-                        min-width: 250px;
+                        margin: 4px 8px 4px 0;
+
                     }
                 }
             }
-
-            .buttons-container-col:last-of-type {
-                align-items: end;
-            }
-
-            button {
-                margin-bottom: 16px;
-                width: fit-content;
-            }
         }
 
-        img {
-            width: 250px;
+        .statues-container {
+            border-top: 2px solid #C8A31E;
+            margin-top: 24px;
+            padding-top: 2px;
+            
+            .statues-images-container {
+                display: flex;
+                flex-wrap: wrap;
+                @media screen and ( max-width: 700px ){
+                    justify-content: center;
+                }
+
+                .statue {
+                    width: 300px;
+                    height: 225px;
+                    position: relative;
+                    margin: 0 24px 24px 0;
+
+                    @media screen and ( max-width: 700px ){
+                        margin: 0 8px 16px;
+                    }
+                    
+                    img {
+                        width: 300px;
+                        z-index: 5;
+                    }
+                    button {
+                        position: absolute;
+                        left: 150px;
+                        top: 112.5px;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
+            
         }
     }
 </style>
