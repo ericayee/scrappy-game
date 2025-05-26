@@ -1,6 +1,9 @@
-# Scrappy game WIP
+# Scrappy'S Statue Quest
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Built with Svelte for the May 2025 [Scrappy Game Jam](https://itch.io/jam/scrappy-game-jam).
+
+https://scrappy-game.netlify.app/  
+https://airwrecka0.itch.io/scrappy  
 
 ## Creating a project
 
