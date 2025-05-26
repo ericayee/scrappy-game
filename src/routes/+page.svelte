@@ -110,8 +110,8 @@
             money -= 500;
             // energy - 10
             energy -= 10;
-            // community + 80 
-            community += 80;
+            // community + 120 
+            community += 120;
 
             boughtOneTime1 = true;
         } else if ( num == 2 ) {
@@ -126,8 +126,8 @@
             money -= 750;
             // energy - 10
             energy -= 10;
-            // community + 75
-            community += 75;
+            // community + 150
+            community += 150;
 
             boughtOneTime3 = true;
         } else if ( num == 4 ) {
@@ -135,8 +135,8 @@
             money -= 1000;
             // energy - 15
             energy -= 15;
-            // community + 150
-            community += 150;
+            // community + 200
+            community += 200;
 
             boughtOneTime4 = true;
         }
@@ -225,7 +225,7 @@
 
     <div class="clicking-container">
         <div class="clicking-section">
-            <h3>Scrappy’s main jobs</h3>
+            <h3>Scrappy rally!</h3>
             <div class="buttons-section">
                 <button onclick={nextGameIsHome ? rallyHome : rallyAway} disabled={playDeadActive || !isGamePlaying || ( !nextGameIsHome && energy < 2 ) || ( nextGameIsHome && energy < 1 )}>
                     Rally the crowd at today’s {nextGameIsHome ? 'HOME' : 'AWAY'} game
@@ -297,28 +297,30 @@
                 <button onclick={() => oneTime(1)} disabled={playDeadActive || boughtOneTime1 || money < 500 || energy < 10}>
                     Promote discounted tickets{boughtOneTime1 ? ' ✅' : ''}
                     <p>Cost: 💰 500 ⚡10</p>
-                    <p>Reward: ❤️80</p>
+                    <p>Reward: ❤️120</p>
                 </button>
                 <button onclick={() => oneTime(3)} disabled={playDeadActive || boughtOneTime3 || money < 750 || energy < 10}>
                     Give out free swag{boughtOneTime3 ? ' ✅' : ''}
                     <p>Cost: 💰750 ⚡10</p>
-                    <p>Reward: ❤️75</p>
+                    <p>Reward: ❤️150</p>
                 </button>
                 <button onclick={() => oneTime(4)} disabled={playDeadActive || boughtOneTime4 || money < 1000 || energy < 15}>
                     Bring a local celebrity to visit{boughtOneTime4 ? ' ✅' : ''}
                     <p>Cost: 💰1,000 ⚡15</p>
-                    <p>Reward: ❤️150</p>
+                    <p>Reward: ❤️200</p>
                 </button>
             </div>
         </div>
         
     </div>
-    
-    
 </section>
 </main>
 
 <style>
+    main {
+        overflow-y: auto;
+        height: 600px;
+    }
     section {
         margin: 24px auto;
         max-width: 95%;
