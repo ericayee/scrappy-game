@@ -53,7 +53,7 @@
 
     // STADIUM SEATING
     // starts at 0; max 5
-    let stadiumUpgradeCosts = [ 10, 75, 150, 250, 300 ]
+    let stadiumUpgradeCosts = [ 20, 100, 200, 300, 500 ]
     let stadiumStatus = $state(0);
     function upgradeStadium() {
         if ( stadiumStatus < 5 ) {
@@ -172,7 +172,6 @@
     <p>Click enough to place Scrappy statues around Oakland.</p>
 
     <div class="statues-container">
-        <h3>Statues</h3>
         <div class="statues-images-container">
             <div class="statue">
             {#if boughtRaimondi}
@@ -209,7 +208,7 @@
             </div>
         </div>
         {#if boughtCityHall && boughtLake && boughtRaimondi}
-            <h1>Congratulations, you got all the statues! Thanks for playing (You can still keep clicking if you like).</h1>
+            <h3>Congratulations, you got all the statues! Scrappy's influence grows. Thanks for playing.</h3>
         {/if}
     </div>
 
@@ -228,7 +227,7 @@
             <h3>Scrappy rally!</h3>
             <div class="buttons-section">
                 <button onclick={nextGameIsHome ? rallyHome : rallyAway} disabled={playDeadActive || !isGamePlaying || ( !nextGameIsHome && energy < 2 ) || ( nextGameIsHome && energy < 1 )}>
-                    Rally the crowd at today’s {nextGameIsHome ? 'HOME' : 'AWAY'} game
+                    Rally the crowd at the {nextGameIsHome ? 'home' : 'away'} game
                     {#if nextGameIsHome}
                         <p>Cost: ⚡1</p>
                         <p>Reward: ❤️2</p>
@@ -247,9 +246,7 @@
                     Play dead (AKA nap)
                     <p>Cost: Can’t rally, fundraise or<br/>buy one-time actions for 15 seconds</p>
                     <p>Reward: ⚡50</p>
-                    {#if playDeadActive}
-                        <p style:font-style={'italic'} style:margin-top={'8px'}>Play dead over in: {playDeadCounter}</p>
-                    {/if}
+                    <p style:font-style={'italic'} style:height={'17.6px'} style:margin-top={'8px'}>{playDeadActive ? `Play dead over in: ${playDeadCounter}` : ''}</p>
                 </button>
             </div>
         </div>
@@ -305,7 +302,7 @@
                     <p>Reward: ❤️150</p>
                 </button>
                 <button onclick={() => oneTime(4)} disabled={playDeadActive || boughtOneTime4 || money < 1000 || energy < 15}>
-                    Bring a local celebrity to visit{boughtOneTime4 ? ' ✅' : ''}
+                    Team up with a local celebrity{boughtOneTime4 ? ' ✅' : ''}
                     <p>Cost: 💰1,000 ⚡15</p>
                     <p>Reward: ❤️200</p>
                 </button>
@@ -322,21 +319,18 @@
         height: 600px;
     }
     section {
-        margin: 24px auto;
-        max-width: 95%;
+        margin: 8px;
 
         @media screen and ( max-width: 700px ){
             text-align: center;
         }
 
         .stats-container {
-            margin: 8px 0 16px;
-
-            border-top: 2px solid #C8A31E;
-            border-bottom: 2px solid #C8A31E;
-            padding: 4px;
+            margin: 8px 0;
         }
         .clicking-container {
+            padding-bottom: 40px;
+
             .clicking-section {
                 
                 .buttons-section {
@@ -356,9 +350,9 @@
         }
 
         .statues-container {
-            border-top: 2px solid #C8A31E;
-            margin-top: 24px;
-            padding-top: 2px;
+            /* border-top: 2px solid #C8A31E; */
+            margin-top: 8px;
+            /* padding-top: 2px; */
             
             .statues-images-container {
                 display: flex;
@@ -368,24 +362,25 @@
                 }
 
                 .statue {
-                    width: 300px;
-                    height: 225px;
+                    width: 200px;
+                    height: 150px;
                     position: relative;
-                    margin: 0 24px 24px 0;
+                    margin: 0 8px 8px 0;
 
                     @media screen and ( max-width: 700px ){
                         margin: 0 8px 16px;
                     }
                     
                     img {
-                        width: 300px;
+                        width: 200px;
                         z-index: 5;
                     }
                     button {
                         position: absolute;
-                        left: 150px;
-                        top: 112.5px;
+                        left: 100px;
+                        top: 75px;
                         transform: translate(-50%, -50%);
+                        width: 150px;
                     }
                 }
             }
